@@ -5,7 +5,7 @@ library(shinyalert)
 library(leaflet)
 library(colorRamps)
 library(lubridate)
-library(rgdal)
+library(sf)
 library(data.table)
 
 #################
@@ -221,7 +221,7 @@ function(input, output, session) {
     if(ext != "geojson"){shinyalert("Wrong file format", "Please upload a .geojson file", type = "error")}
     shiny::validate(need(ext %in% c("geojson"), "Please upload a .geojson file"))
     # load infile to object
-    geoms <- readOGR(infile$datapath)
+    geoms <- as(st_read(infile$datapath), "Spatial")
     # look up spatial class type and render geometry
     if(class(geoms)[1] == "SpatialPointsDataFrame"){
       leafletProxy("map") %>%
